@@ -1,8 +1,3 @@
-# Environment Check (Java)
-
-This is an environment check for a Circle Internet Financial interview problem in Java.  You have probably been given this folder in advance of an interview with Circle to make sure that the actual interview problem will run on your development machine during the interview.
-
-
 ## Checking your environment
 
 Make sure you have the following prerequisites installed:
@@ -21,12 +16,31 @@ $ mvn install
 $ java -jar "./target/platform-pair-envcheck-0.0.1-SNAPSHOT.jar" server configuration.yml
 ```
 
-Finally, in a third window, make sure you can curl the Dropwizard server.  You should receive something like the following (adjusted to the current time):
-```bash
-$ curl localhost:8080
-{"data":"2020-03-16T02:20:37.256Z"}
+Once you do that, the program will create a new table named "accounts" in the PSQL databse "interview".
+
+You can create a new user by running the following curl command in a new terminal window:
+```
+$ curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"name":"xyz","balance":abc}' \
+  http://localhost:8080/account/create
 ```
 
-If you receive something like the above result, then you're all ready for the interview!  If you receive an error, or no response, check the window with the Dropwizard server for logs that may help you debug the issue (not starting the database, or an old version of Java, are the most common).  If you continue having problems, email whomever sent you this package describing your error and they'll help you get it sorted out.
+You can get the account details of any account by running the following curl command and replacing the [Account Number] for whichever account you want to see the details for:
+```
+$ curl --header "Content-type: application/json" \
+  --request GET \
+  http://localhost:8080/account/[Account Number]   
+```
 
-Good luck on your interview!
+To make any transactions, you need to replace [SENDER ACCOUNT NUMBER] with the sender account number, [RECEIVER ACCOUNT NUMBER] with the receiver account number and [AMOUNT TO BE TRANSFERRED] with the amount to be transferred:
+```
+$ curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"fromAccountNumber":[SENDER ACCOUNT NUMBER],"toAccountNumber":[RECEIVER ACCOUNT NUMBER],"amount":[AMOUNT TO BE TRANSFERRED]}' \
+  http://localhost:8080/account/transfer   
+```
+
+
+
+
